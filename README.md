@@ -14,7 +14,7 @@ Thread in Java
 * One thread per call stack or call stack per a thread
 
 		  Main Method 				  Thread 1 
-		  Call Stack				  Call Stack
+		  Call Stack A				  Call Stack B
 		|-------------|             |-------------|
 		|             |             |             |
 		|             |             |             |
@@ -79,4 +79,82 @@ Thread State: Just a brief. getState(instance method) and isAlive(native method)
 * Hold/Wait: Waiting for something
 * Terminated: Done with its execution
 
-Starting A Thread
+Starting A Thread: t.start()	: lowercase t is referring to the thread of execution rather than Thread class
+* A new thread of execution starts(with a new call stack)
+* The thread moves from the new state to the runnable state
+* When the thread gets a chance to execute, its target run() method will run
+
+Thread t = new Thread();
+t.run()					// Legal, but does not start a new thread
+
+setName() getName() methods on Thread object: ** ThreadNames.java **
+
+Thread.currentThread() -> currentThread is static method, which returns a reference to the currently executing thread
+
+The behavior is not guaranteed.
+
+Multithreading Example By Counting Numbers: ** MultithreadingExample.java **
+* Nothing is guaranteed except this "Each Thread will start, and each thread will run to completion"
+* Order is not guaranteed by scheduler
+
+A thread is done being a thread when its target run() method completes
+* The stack for that thread dissolves
+* Thread is considered dead/terminated
+* You can call other method but not start() again
+
+Once a thread has been started, it can never be started again
+* IllegalThreadStateException
+
+Thread ID: ** ThreadNames.java **
+* getId(): long number
+
+
+Thread Scheduler
+* The thread scheduler is part of JVM
+* TS that decides which thread - of all that are eligible - will actually run
+* The order in which runnable threads are chosen to run is not guaranteed
+
+Although we don't control the thread scheduler, we can sometimes influence it with some methods.
+
+Methods from the java.lang.Thread class
+* public static void sleep(long millis) throws InterruptedException  // Overloaded versions are there
+* public static void yield()
+
+* public final void join() throws InterruptedException // Overloaded versions are there
+* public final void setPriority(int newPriority)
+
+Methods from the java.lang.Object class: it's being called from synchronize code
+* public final void wait() throws InterruptedException
+* public final void notify()
+* public final void notifyAll()
+
+Thread States and Transitions
+* We have seen: Runnable, Running and Dead states
+* When run method completes thread moves from the running state directly to dead state(terminated)
+
+THREAD STATES (Five) : ** ThreadTransition.java **
+* New: Thread object is created but start method has not been invoked on it. Live thread object
+* Runnable: Thread enters into runnable when the start method is invoked. It(alive thread) is available in runnable thread pool and eligible for run. 
+	- New -> Runnable
+* Running: Where the action is. Thread scheduler selects it from the runnable pool to be the currently executing process.
+	- Runnable -> Running, Running -> Runnable
+* Waiting/Blocked/Sleeping: All three are same with common concept "thread is not eligible to run".
+	- Running -> Waiting, Waiting -> Runnable, Runnable -> Running
+	- There are several ways to get into this state
+		1. A thread may blocked because it's waiting for the resourse
+		2. A thread may be sleeping because the thread's run code tells it to sleep for some period of time
+		3. A thread may be waiting because the thread's code causes it to wait
+	- One thing is for sure that one thread does not tell another thread to block
+	- Thread is blocked but it's alive
+* Dead: A thread is dead when it's run() method completes.
+	- A thread object is still viable but it is no longer a separate thread of execution.
+	- Once a thread is dead, it can never be brought back to life
+	- If you invoke start() on a dead thread instance, it will raise "IllegalThreadStateException"
+	- It's no longer considered alive
+	
+					Waiting/Blocked/Sleeping
+						 /		  ^
+						/		   \
+					   /		    \
+					  *				 \
+			NEW --> RUNNABLE --> RUNNING --> DEAD
