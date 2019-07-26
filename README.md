@@ -29,7 +29,7 @@ Thread in Java
 		|             |             |             |
 		|             |             |             |
 		|-------------|             |-------------|
-		| static main |             | 	void run  |
+		| static main |             |   void run  |
 		|-------------|             |-------------|
 		
 Execution on JVM
@@ -111,7 +111,7 @@ Thread ID: ** ThreadNames.java **
 
 Thread Scheduler
 * The thread scheduler is part of JVM
-* TS that decides which thread - of all that are eligible - will actually run
+* TS that decides which thread – of all that are eligible – will actually run
 * The order in which runnable threads are chosen to run is not guaranteed
 
 Although we don't control the thread scheduler, we can sometimes influence it with some methods.
@@ -132,7 +132,7 @@ Thread States and Transitions
 * We have seen: Runnable, Running and Dead states
 * When run method completes thread moves from the running state directly to dead state(terminated)
 
-THREAD STATES (Five) : ** ThreadTransition.java **
+THREAD STATES (Five): ** ThreadTransition.java **
 * New: Thread object is created but start method has not been invoked on it. Live thread object
 * Runnable: Thread enters into runnable when the start method is invoked. It(alive thread) is available in runnable thread pool and eligible for run. 
 	- New -> Runnable
@@ -141,7 +141,7 @@ THREAD STATES (Five) : ** ThreadTransition.java **
 * Waiting/Blocked/Sleeping: All three are same with common concept "thread is not eligible to run".
 	- Running -> Waiting, Waiting -> Runnable, Runnable -> Running
 	- There are several ways to get into this state
-		1. A thread may blocked because it's waiting for the resourse
+		1. A thread may blocked because it's waiting for the resource
 		2. A thread may be sleeping because the thread's run code tells it to sleep for some period of time
 		3. A thread may be waiting because the thread's code causes it to wait
 	- One thing is for sure that one thread does not tell another thread to block
@@ -153,8 +153,7 @@ THREAD STATES (Five) : ** ThreadTransition.java **
 	- It's no longer considered alive
 	
 					Waiting/Blocked/Sleeping
-						 /		  ^
-						/		   \
-					   /		    \
-					  *				 \
-			NEW --> RUNNABLE --> RUNNING --> DEAD
+                                      ^					
+                       /               \
+                      *
+			NEW --> RUNNABLE -------> RUNNING --> DEAD
