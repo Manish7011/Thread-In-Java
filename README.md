@@ -157,3 +157,48 @@ THREAD STATES (Five): ** ThreadTransition.java **
                        /               \
                       *
 			NEW --> RUNNABLE -------> RUNNING --> DEAD
+			
+Preventing Thread Execution
+* Sleeping * Waiting * Blocked  because it needs an object's lock
+
+* Sleeping
+	- sleep() method is static method of class Thread, one thread can not put another thread to sleep
+	- use it in your code to slow a thread down
+	- Thread.sleep(long millis) throws InterruptedException
+	- sleep is best way to help all threads get a chance to run
+	- when sleep call, it must go to sleep for at least the specified number of milliseconds
+	- RUNNING -> SLEEP -> RUNNABLE -> RUNNING
+* Thread Priorities and yield()
+	- The scheduler in most JVMs uses preemptive, priority-based scheduling - which implies some sort of time slicing
+	- The lower priority running thread usually will be bumped back to runnable and the highest-priority thread will be chosen to run.
+	- In most cases, the running thread will be of equal or greater priority than the highest-priority thread in pool.
+	- Don't rely on thread priority when designing your multithreaded application. Because thread scheduling priority is not guaranteed. it's better to avoid modifying thread priorities. 
+	- A scheduler might do one of following things(among other things)
+		a. Pick thread to run, and run it there until it blocks or completes.
+		b. Time-slice the threads in the pool to give everyone an equal opportunity to run.
+
+* Setting a Thread's priority: ** PriorityThread.java **
+	- public final void setPriority(int newPriority) 
+	- public final static int MIN_PRIORITY = 1;  There are two more MAX_PRIORITY and NORM_PRIORITY with value 10 and 5 respectively
+	
+* Yield() method
+	- public static native void yield();
+	- It supposed to do is make the currently running thread head back to runnable to allow other threads of the same priority to get their turn.
+	- That will promote graceful turn-taking among equal-priority threads
+	- Yield will cause a thread to go from running to runnable
+	- There's no guarantee the yielding thread won't just be chosen again over all the others!
+	
+* Join() method ** you will find use of join method in almost every examples **
+	- public final void join() throws InterruptedException
+	- Class Thread lets one Thread "join onto the end" of another thread
+	- t.join() -> join me(current thread) to the end of t, so that t must finish before I(current thread) can run again
+	- public final synchronized void join(long millis) throws InterruptedException -> Wait until thread t is done, but if it takes longer than 5000 milliseconds, then stop waiting and become runnable anyway.
+	- It works on live thread like runnable or running or sleeping(not on new)
+
+Synchronizing Code, Thread Problems
+* Account overdrawan problem
+* Multiple access of a single account ** AccountThreadProblem.java **
+* Race condition-> Where multiple threads can access the same resource (object)
+
+Preventing the account overdraw
+*
